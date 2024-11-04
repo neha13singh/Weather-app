@@ -1,6 +1,6 @@
 import './App.css';
-import Weather from './components/weather';
-import Planner from './components/planner/Index';
+import Weather from './components/weather/Index.jsx';
+import Planner from './components/planner/Index.jsx';
 
 function App() {
   return (
