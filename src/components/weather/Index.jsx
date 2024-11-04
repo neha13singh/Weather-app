@@ -1,26 +1,37 @@
 import { useEffect, useState } from "react";
 import Search from "../search";
+import Typography from "@mui/material/Typography";
 
 export default function Weather() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [weatherData, setWeatherData] = useState(null);
+  const [error, setError] = useState(null);
 
   async function fetchWeatherData(param) {
     setLoading(true);
+    setError(null);
     try {
       const response = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?q=${param}&appid=88b59dc6d9ce4a2ef0c2a5f720f94086`
       );
-
+      
       const data = await response.json();
-      if (data) {
+      if (data.cod === "404") {
+        setError("City not found. Please check spelling and try again.");
+        setWeatherData(null);
+      } else if (data.cod !== 200) {
+        setError("Unable to fetch weather data. Please try again.");
+        setWeatherData(null);
+      } else {
         setWeatherData(data);
-        setLoading(false);
+        setError(null);
       }
     } catch (e) {
+      setError("Something went wrong. Please try again.");
+      setWeatherData(null);
+    } finally {
       setLoading(false);
-      console.log(e);
     }
   }
 
@@ -50,6 +61,22 @@ export default function Weather() {
       />
       {loading ? (
         <div className="loading">Loading...</div>
+      ) : error ? (
+        <div className="error-message">
+          <Typography 
+            variant="body1" 
+            sx={{ 
+              color: '#d32f2f',
+              textAlign: 'center',
+              padding: '20px',
+              background: '#ffebee',
+              borderRadius: '12px',
+              margin: '20px 0'
+            }}
+          >
+            {error}
+          </Typography>
+        </div>
       ) : (
         <div className="weather-content">
           <div className="city-name">
