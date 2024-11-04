@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Search from "../search";
+import Search from "./Search.jsx";
 import Typography from "@mui/material/Typography";
 
 export default function Weather() {
